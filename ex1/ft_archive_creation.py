@@ -1,5 +1,4 @@
 import sys
-import typing
 
 def open_file(
         open_file_name: str,
@@ -18,7 +17,13 @@ def open_file(
 
 
 def transform_data(data: str) -> str:
-    return data.replace('\n', "#\n").replace('\0', "#\0")
+    lines = data.splitlines()
+    transformed_lines = []
+
+    for line in lines:
+        transformed_lines.append(line + "#")
+
+    return "\n".join(transformed_lines)
 
 
 
@@ -62,6 +67,13 @@ def main() -> None:
 
         new_data = transform_data(data)
         print(new_data)
+
+        opened = open_file(file_to_open, "w")
+        if opened is None:
+            return
+
+        opened.write(new_data)
+        opened.close()
 
 
 if __name__ == "__main__":
