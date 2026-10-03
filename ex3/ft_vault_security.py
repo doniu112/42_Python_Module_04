@@ -29,7 +29,7 @@ def main() -> None:
     print(secure_archive("/etc/master.passwd"))
 
     print("Using 'secure_archive' to read from a regular file:")
-    result = secure_archive("ex3/ancient_fragment.txt")
+    result = secure_archive("ancient_fragment.txt")
     print(result)
 
     if result[0]:

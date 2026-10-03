@@ -68,6 +68,7 @@ def main() -> None:
         footer(file_to_open)
 
         new_data = transform_data(data)
+        print("Transform data:")
         print("---")
         print(new_data)
         print("---")
@@ -77,10 +78,12 @@ def main() -> None:
         if new_file_name == "":
             print("Not saving data.")
             return
+        
         opened = open_file(new_file_name, "w")
         if opened is None:
             return
 
+        print(f"Saving data to '{new_file_name}'")
         opened.write(new_data)
         opened.close()
         

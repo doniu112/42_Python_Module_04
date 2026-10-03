@@ -11,9 +11,13 @@ def open_file(
         f = open(open_file_name, open_file_mode)
         return f
     except FileNotFoundError as error:
-        sys.stderr.write(f"[STDERR] Error opening file '{open_file_name}': {error}\n")
+        sys.stderr.write(f"[STDERR] Error opening file '{open_file_name}': "
+                         f"{error}\n"
+                        )
     except PermissionError as error:
-        sys.stderr.write(f"[STDERR] Error opening file '{open_file_name}': {error}\n")
+        sys.stderr.write(f"[STDERR] Error opening file '{open_file_name}': "
+                         f"{error}\n"
+                        )
     return None
 
 
@@ -39,9 +43,9 @@ def footer(file_name: str) -> None:
 def argv_error() -> None:
     if len(sys.argv) > 2:
         print("[TOO MANY FILES] Wrong number of files: "
-              "Usage: ft_archive_creation.py <file>\n")
+              "Usage: ft_stream_management.py <file>\n")
     else:
-        print("Usage: ft_archive_creation.py <file>\n")
+        print("Usage: ft_stream_management.py <file>\n")
 
 
 def get_output_file_name() -> str:
@@ -77,7 +81,7 @@ def main() -> None:
         print(new_data)
         print("---")
 
-        new_file_name = get_new_file_name()
+        new_file_name = get_output_file_name()
 
         if new_file_name == "":
             print("Not saving data.")
