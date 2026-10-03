@@ -10,12 +10,10 @@ def open_file(
         print(f"Accessing file '{open_file_name}'")
         f = open(open_file_name, open_file_mode)
         return f
-    except FileNotFoundError:
-        print(f"Error opening file '{open_file_name}': "
-              f"[Errno 2] No such file or directory: '{open_file_name}'\n")
-    except PermissionError:
-        print(f"Error opening file '{open_file_name}': "
-              f"[Errno 13] Permission denied: '{open_file_name}'\n")
+    except FileNotFoundError as error:
+        sys.stderr.write(f"[STDERR] Error opening file '{open_file_name}': {error}\n")
+    except PermissionError as error:
+        sys.stderr.write(f"[STDERR] Error opening file '{open_file_name}': {error}\n")
     return None
 
 
@@ -46,6 +44,13 @@ def argv_error() -> None:
         print("Usage: ft_archive_creation.py <file>\n")
 
 
+def get_output_file_name() -> str:
+    sys.stdout.write("Enter new file name (or empty): ")
+    sys.stdout.flush()
+
+    return sys.stdin.readline().strip()
+
+
 def main() -> None:
     if len(sys.argv) != 2:
         argv_error()
@@ -72,18 +77,23 @@ def main() -> None:
         print(new_data)
         print("---")
 
-        new_file_name = input("Enter new file name (or empty): ")
+        new_file_name = get_new_file_name()
 
         if new_file_name == "":
             print("Not saving data.")
             return
+
+        print(f"Saving data to '{new_file_name}'")
+
         opened = open_file(new_file_name, "w")
+
         if opened is None:
+            print("Data not saved.")
             return
 
         opened.write(new_data)
         opened.close()
-        
+
         print(f"Data saved in file '{new_file_name}'.")
 
 
