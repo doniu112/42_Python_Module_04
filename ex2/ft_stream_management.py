@@ -12,13 +12,39 @@ def open_file(
         return f
     except FileNotFoundError as error:
         sys.stderr.write(f"[STDERR] Error opening file '{open_file_name}': "
-                         f"{error}\n"
-                        )
+                         f"{error}\n")
     except PermissionError as error:
         sys.stderr.write(f"[STDERR] Error opening file '{open_file_name}': "
+                         f"{error}\n")
+    except IsADirectoryError as error:
+        sys.stderr.write(f"[STDERR] Error opening file '{open_file_name}': "
+                         f"{error}\n")
+    except UnicodeDecodeError as error:
+        sys.stderr.write(f"[STDERR] Error opening file '{open_file_name}': "
+                         f"{error}\n")
+    return None
+
+
+def save_file(file_name: str, data: str) -> None:
+    opened = open_file(file_name, "w")
+    if opened is None:
+        return
+
+    try:
+        print(f"Saving data to '{file_name}'")
+        opened.write(data)
+        print(f"Data saved in file '{file_name}'.")
+    except IsADirectoryError as error:
+        sys.stderr.write(f"[STDERR] Error saving data to file '{file_name}': "
                          f"{error}\n"
                         )
-    return None
+    except EOFError as error:
+        sys.stderr.write(f"[STDERR] Error saving data to file '{file_name}': "
+                         f"{error}\n"
+                        )
+    finally:
+        if not opened.closed:
+            opened.close()
 
 
 def transform_data(data: str) -> str:
@@ -87,18 +113,7 @@ def main() -> None:
             print("Not saving data.")
             return
 
-        print(f"Saving data to '{new_file_name}'")
-
-        opened = open_file(new_file_name, "w")
-
-        if opened is None:
-            print("Data not saved.")
-            return
-
-        opened.write(new_data)
-        opened.close()
-
-        print(f"Data saved in file '{new_file_name}'.")
+        save_file(new_file_name, new_data)
 
 
 if __name__ == "__main__":

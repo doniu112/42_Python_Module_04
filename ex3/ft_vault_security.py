@@ -15,7 +15,7 @@ def secure_archive(
 
         return False, "Invalid action"
 
-    except OSError as error:
+    except (OSError, UnicodeDecodeError) as error:
         return False, str(error)
 
 

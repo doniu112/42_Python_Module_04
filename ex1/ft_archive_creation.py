@@ -16,7 +16,33 @@ def open_file(
     except PermissionError:
         print(f"Error opening file '{open_file_name}': "
               f"[Errno 13] Permission denied: '{open_file_name}'\n")
+    except IsADirectoryError:
+        print(f"Error opening file '{open_file_name}': "
+              f"[Errno 21] Is a directory: '{open_file_name}'\n")
+    except UnicodeDecodeError:
+        print(f"Error opening file '{open_file_name}': "
+              f"[Errno 0] Unicode decode error: '{open_file_name}'\n")
     return None
+
+
+def save_file(file_name: str, data: str) -> None:
+    opened = open_file(file_name, "w")
+    if opened is None:
+        return
+
+    try:
+        print(f"Saving data to '{file_name}'")
+        opened.write(data)
+        print(f"Data saved in file '{file_name}'.")
+    except IsADirectoryError:
+        print(f"Error saving data to file '{file_name}': "
+              f"[Errno 21] Is a directory: '{file_name}'\n")
+    except EOFError:
+        print(f"Error saving data to file '{file_name}': "
+              f"[Errno 0] EOF error: '{file_name}'\n")
+    finally:
+        if not opened.closed:
+            opened.close()
 
 
 def transform_data(data: str) -> str:
@@ -78,16 +104,8 @@ def main() -> None:
         if new_file_name == "":
             print("Not saving data.")
             return
-        
-        opened = open_file(new_file_name, "w")
-        if opened is None:
-            return
 
-        print(f"Saving data to '{new_file_name}'")
-        opened.write(new_data)
-        opened.close()
-        
-        print(f"Data saved in file '{new_file_name}'.")
+        save_file(new_file_name, new_data)
 
 
 if __name__ == "__main__":

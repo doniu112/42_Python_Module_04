@@ -16,6 +16,12 @@ def open_file(
     except PermissionError:
         print(f"Error opening file '{open_file_name}': "
               f"[Errno 13] Permission denied: '{open_file_name}'\n")
+    except IsADirectoryError:
+        print(f"Error opening file '{open_file_name}': "
+              f"[Errno 21] Is a directory: '{open_file_name}'\n")
+    except UnicodeDecodeError:
+        print(f"Error opening file '{open_file_name}': "
+              f"[Errno 0] Unicode decode error: '{open_file_name}'\n")
     return None
 
 
