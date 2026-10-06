@@ -19,9 +19,6 @@ def open_file(
     except IsADirectoryError:
         print(f"Error opening file '{open_file_name}': "
               f"[Errno 21] Is a directory: '{open_file_name}'\n")
-    except UnicodeDecodeError:
-        print(f"Error opening file '{open_file_name}': "
-              f"[Errno 0] Unicode decode error: '{open_file_name}'\n")
     return None
 
 
@@ -40,6 +37,9 @@ def save_file(file_name: str, data: str) -> None:
     except EOFError:
         print(f"Error saving data to file '{file_name}': "
               f"[Errno 0] EOF error: '{file_name}'\n")
+    except OSError as error:
+        print(f"Error saving data to file '{file_name}': "
+              f"{error}\n")
     finally:
         if not opened.closed:
             opened.close()
@@ -84,14 +84,17 @@ def main() -> None:
         if opened is None:
             return
 
-        print("---\n")
-
-        data = opened.read()
-
-        print(data)
-
-        opened.close()
-        footer(file_to_open)
+        try:
+            print(f"Reading data from '{file_to_open}'")
+            data = opened.read()
+            print(f"Data read from file '{file_to_open}'.")
+        except UnicodeDecodeError:
+            print(f"Error reading data from file '{file_to_open}': "
+                  f"[Errno 0] Unicode decode error: '{file_to_open}'\n")
+        finally:
+            if not opened.closed:
+                opened.close()
+                footer(file_to_open)
 
         new_data = transform_data(data)
         print("Transform data:")
@@ -99,7 +102,11 @@ def main() -> None:
         print(new_data)
         print("---")
 
-        new_file_name = input("Enter new file name (or empty): ")
+        try:
+            new_file_name = input("Enter new file name (or empty): ")
+        except EOFError:
+            print("\nInput ended. Data not saved.")
+            return
 
         if new_file_name == "":
             print("Not saving data.")

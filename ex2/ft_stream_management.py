@@ -42,6 +42,10 @@ def save_file(file_name: str, data: str) -> None:
         sys.stderr.write(f"[STDERR] Error saving data to file '{file_name}': "
                          f"{error}\n"
                         )
+    except OSError as error:
+        sys.stderr.write(f"[STDERR] Error saving data to file '{file_name}': "
+                         f"{error}\n"
+                        )
     finally:
         if not opened.closed:
             opened.close()
@@ -93,14 +97,18 @@ def main() -> None:
         if opened is None:
             return
 
-        print("---\n")
-
-        data = opened.read()
-
-        print(data)
-
-        opened.close()
-        footer(file_to_open)
+        try:
+            print(f"Reading data from '{file_to_open}'")
+            data = opened.read()
+            print(f"Data read from file '{file_to_open}'.")
+        except UnicodeDecodeError as error:
+            sys.stderr.write(f"[STDERR] Error reading data from file "
+                             f"'{file_to_open}': {error}\n"
+                            )
+        finally:
+            if not opened.closed:
+                opened.close()
+                footer(file_to_open)
 
         new_data = transform_data(data)
         print("---")
