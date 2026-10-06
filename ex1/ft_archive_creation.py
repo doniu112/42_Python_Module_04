@@ -23,26 +23,24 @@ def open_file(
 
 
 def save_file(file_name: str, data: str) -> None:
-    opened = open_file(file_name, "w")
-    if opened is None:
-        return
-
     try:
+        opened = open_file(file_name, "w")
+        if opened is None:
+            print("Data not saved.")
+            return
+
         print(f"Saving data to '{file_name}'")
-        opened.write(data)
-    except IsADirectoryError:
-        print(f"Error saving data to file '{file_name}': "
-              f"[Errno 21] Is a directory: '{file_name}'\n")
-    except EOFError:
-        print(f"Error saving data to file '{file_name}': "
-              f"[Errno 0] EOF error: '{file_name}'\n")
-    except OSError as error:
-        print(f"Error saving data to file '{file_name}': "
-              f"{error}\n")
-    finally:
-        if not opened.closed:
+
+        try:
+            opened.write(data)
+        finally:
             opened.close()
-            print(f"Data saved in file '{file_name}'.")
+
+    except (OSError, UnicodeError) as error:
+        print(f"Error saving file '{file_name}': {error}")
+        print("Data not saved successfully.")
+    else:
+        print(f"Data saved in file '{file_name}'.")
 
 
 
