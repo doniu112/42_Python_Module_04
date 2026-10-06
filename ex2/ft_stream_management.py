@@ -49,7 +49,6 @@ def save_file(file_name: str, data: str) -> None:
         print(f"Data saved in file '{file_name}'.")
 
 
-
 def transform_data(data: str) -> str:
     lines = data.splitlines()
     transformed_lines = []
