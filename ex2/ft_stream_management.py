@@ -22,6 +22,7 @@ def open_file(
     except UnicodeDecodeError as error:
         sys.stderr.write(f"[STDERR] Error opening file '{open_file_name}': "
                          f"{error}\n")
+        return None
     return None
 
 
@@ -101,10 +102,12 @@ def main() -> None:
             print(f"Reading data from '{file_to_open}'")
             data = opened.read()
             print(f"Data read from file '{file_to_open}'.")
-        except UnicodeDecodeError as error:
+            print("---")
+            print(data)
+        except (OSError, UnicodeDecodeError) as error:
             sys.stderr.write(f"[STDERR] Error reading data from file "
-                             f"'{file_to_open}': {error}\n"
-                            )
+                             f"'{file_to_open}': {error}\n")
+            return
         finally:
             if not opened.closed:
                 opened.close()

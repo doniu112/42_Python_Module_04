@@ -50,6 +50,8 @@ def main() -> None:
             print(f"Reading data from '{file_to_open}'")
             data = opened.read()
             print(f"Data read from file '{file_to_open}'.")
+            print("---")
+            print(data)
         except UnicodeDecodeError:
             print(f"Error reading data from file '{file_to_open}': "
                   f"[Errno 0] Unicode decode error: '{file_to_open}'\n")
