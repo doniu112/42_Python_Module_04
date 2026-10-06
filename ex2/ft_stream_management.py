@@ -34,7 +34,6 @@ def save_file(file_name: str, data: str) -> None:
     try:
         print(f"Saving data to '{file_name}'")
         opened.write(data)
-        print(f"Data saved in file '{file_name}'.")
     except IsADirectoryError as error:
         sys.stderr.write(f"[STDERR] Error saving data to file '{file_name}': "
                          f"{error}\n"
@@ -50,6 +49,8 @@ def save_file(file_name: str, data: str) -> None:
     finally:
         if not opened.closed:
             opened.close()
+            print(f"Data saved in file '{file_name}'.")
+
 
 
 def transform_data(data: str) -> str:
